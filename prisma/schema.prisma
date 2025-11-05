@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  testament    String   // "OT" or "NT"
+  chapterCount Int
+  verses       Verse[]
+  
+  @@index([name])
+}
+
+model Verse {
+  id      Int    @id @default(autoincrement())
+  bookId  Int
+  chapter Int
+  verse   Int
+  text    String // Full Hebrew text
+  book    Book   @relation(fields: [bookId], references: [id])
+  words   Word[]
+  
+  @@unique([bookId, chapter, verse])
+  @@index([bookId, chapter, verse])
+}
+
+model Word {
+  id       Int    @id @default(autoincrement())
+  verseId  Int
+  position Int    // Word position in verse (1, 2, 3...)
+  text     String // Hebrew word
+  lemma    String // Dictionary form
+  morph    String // Morphology code
+  gloss    String // English translation
+  strongs  String // Strong's number
+  verse    Verse  @relation(fields: [verseId], references: [id])
+  
+  @@index([verseId])
+  @@index([lemma])
+  @@index([strongs])
+}
