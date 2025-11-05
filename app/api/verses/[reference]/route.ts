@@ -53,10 +53,7 @@ export async function GET(
   try {
     // This is the correct way to get the reference
     const { reference } = await Promise.resolve(params);
-    
-    // Remove this duplicate line:
-    // const reference = params.reference;  // This line is redundant and causes an error
-    
+      
     // Now you can use the reference variable
     const match = reference.match(/^([A-Za-z]+)\.(\d+)\.(\d+)$/);
     
