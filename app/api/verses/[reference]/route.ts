@@ -46,13 +46,14 @@ const bookAbbreviations: { [key: string]: string } = {
 
 const prisma = new PrismaClient();
 
+import { NextRequest } from 'next/server';
+
 export async function GET(
-  request: Request,
-  { params }: { params: { reference: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ reference: string }> }
 ) {
   try {
-    // This is the correct way to get the reference
-    const { reference } = await Promise.resolve(params);
+    const { reference } = await params;
       
     // Now you can use the reference variable
     const match = reference.match(/^([A-Za-z]+)\.(\d+)\.(\d+)$/);
